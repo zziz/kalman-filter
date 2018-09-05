@@ -1,4 +1,4 @@
-Implementation of Kalman filter in 55 lines using Numpy.  
+Implementation of Kalman filter in 30 lines using Numpy.  
 All notations are same as in Kalman Filter [Wikipedia Page](https://en.wikipedia.org/wiki/Kalman_filter)   
 
 It is a generic implementation of Kalman Filter, should work for any system, provided system dynamics matrices are set up properly. Included example is the prediction of position, velocity and acceleration based on position measurements. Synthetic data is generated for the purpose of illustration.           
