@@ -2,12 +2,22 @@ import numpy as np
 
 class KalmanFilter(object):
     def __init__(self, F = None, B = None, H = None, Q = None, R = None, P = None, x0 = None):
-
         if(F is None or H is None):
             raise ValueError("Set proper system dynamics.")
 
+        if F.shape[0] != F.shape[1]:
+            # x̂_(k|k-1) = dot(F, x_(k|k-1))
+            # x̂_(k|k-1) and x_(k|k-1) are of shape (n, 1)
+            # therefore F must have shape of (n, n)
+            raise ValueError(f"State transition model F must be a square matrix, received shape: {F.shape}")
+
         self.n = F.shape[1]
-        self.m = H.shape[1]
+
+        if H.shape[1] != self.n:
+            # z_k estimate = dot(H, x̂_k|k-1)
+            # x̂_(k|k-1) is of shape (n, 1)
+            # therefore H must have shape of (m, n)
+            raise ValueError(f"Observation model H must be have shape (m, {self.n}), received shape: {H.shape}")
 
         self.F = F
         self.H = H
@@ -28,8 +38,7 @@ class KalmanFilter(object):
         K = np.dot(np.dot(self.P, self.H.T), np.linalg.inv(S))
         self.x = self.x + np.dot(K, y)
         I = np.eye(self.n)
-        self.P = np.dot(np.dot(I - np.dot(K, self.H), self.P), 
-        	(I - np.dot(K, self.H)).T) + np.dot(np.dot(K, self.R), K.T)
+        self.P = np.dot(I - np.dot(K, self.H), self.P)
 
 def example():
 	dt = 1.0/60
